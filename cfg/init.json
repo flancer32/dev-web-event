@@ -1,0 +1,21 @@
+{
+  "@teqfw/db": {
+    "client": "pg",
+    "connection": {
+      "database": "cr",
+      "host": "127.0.0.1",
+      "password": "...",
+      "user": "..."
+    }
+  },
+  "@teqfw/core": {
+    "devMode": false
+  },
+  "@teqfw/web": {
+    "frontLogsMonitoring": false,
+    "server": {
+      "port": 9999
+    },
+    "urlBase": "domain.com"
+  }
+}

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Dev: web-event">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dev: web-event</title>
+
+    <script>
+        self.addEventListener('load', async () => {
+            // see `node_modules/@teqfw/web/web/js/install.mjs`
+            const {Install} = await import('./web/@teqfw/web/js/install.mjs');
+            // create & init bootstrap object
+            /** @type {Install} */
+            const installer = new Install();
+            installer.setCssMount('BODY > DIV');
+            installer.setNsApp('Dev_Front_App');
+            // set printout to UI DIV & to console
+            // local printout DIV
+            const elLaunchpad = document.querySelector('.launchpad');
+            installer.setFnPrintout((msg) => {
+                elLaunchpad.innerHTML = msg;
+                console.log(`[shell]: ${msg}`);
+            });
+            // run the application's bootstrap
+            await installer.run();
+        });
+    </script>
+
+</head>
+<body>
+
+<div class="launchpad">Starting...</div>
+
+<!-- These styles are loaded after landing page is displayed -->
+<link rel="stylesheet" href="./styles.css">
+
+</body>
+</html>

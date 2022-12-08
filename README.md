@@ -1,2 +1,2 @@
 # dev-web-event
-Development ENV for @teqfw/web-event plugin
+Development ENV for @teqfw/web-event plugin.
