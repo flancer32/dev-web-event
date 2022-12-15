@@ -28,7 +28,8 @@
     "@teqfw/web": "github:teqfw/web",
     "@teqfw/web-api": "github:teqfw/web-api",
     "@teqfw/web-event": "github:teqfw/web-event",
-    "pg": "*"
+    "pg": "*",
+    "tweetnacl": "*"
   },
   "devDependencies": {
     "mocha": "*"

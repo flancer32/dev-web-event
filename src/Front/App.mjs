@@ -26,9 +26,12 @@ export default class Dev_Front_App {
         const container = spec['TeqFw_Di_Shared_Container$'];
         /** @type {TeqFw_Core_Shared_Api_ILogger} */
         const logger = spec['TeqFw_Core_Shared_Api_ILogger$$']; // instance
-
-        /** @type {TeqFw_Web_Event_Front_Mod_Connect_Reverse} */
-        const streamBf = spec['TeqFw_Web_Event_Front_Mod_Connect_Reverse$'];
+        // init identity
+        /** @type {TeqFw_Web_Event_Front_Mod_Identity_Front} */
+        const modIdentity = spec['TeqFw_Web_Event_Front_Mod_Identity_Front$'];
+        // then open event bf-stream
+        /** @type {TeqFw_Web_Event_Front_Web_Connect_Stream_Open.act|function} */
+        const connReverseOpen = spec['TeqFw_Web_Event_Front_Web_Connect_Stream_Open$'];
         /** @type {TeqFw_Web_Event_Front_Mod_Bus} */
         const eventBus = spec['TeqFw_Web_Event_Front_Mod_Bus$'];
         /** @type {TeqFw_Web_Event_Shared_Event_Back_Stream_Reverse_Authenticated} */
@@ -64,7 +67,9 @@ export default class Dev_Front_App {
             async function initEventStream(container) {
                 return new Promise((resolve, reject) => {
                     if (navigator.onLine) {
-                        streamBf.open();
+                        // start reverse connection opening
+                        connReverseOpen();
+                        // set listeners to resume application when events stream will be ready
                         const subsSuccess = eventBus.subscribe(esbAuthenticated.getEventName(), (evt) => {
                             eventBus.unsubscribe(subsSuccess);
                             logger.info(`Events reverse stream is opened on the front and authenticated by back.`);
@@ -84,6 +89,8 @@ export default class Dev_Front_App {
             // MAIN
             const print = createPrintout(fnPrintout);
             print(`TeqFW App is initializing...`);
+            await modIdentity.init();
+            print(`Frontend identity is initialized.`);
             await initEventStream(container);
         }
 
