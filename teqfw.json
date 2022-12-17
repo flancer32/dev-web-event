@@ -4,5 +4,11 @@
       "ns": "Dev",
       "path": "./src"
     }
+  },
+  "@teqfw/core": {
+    "plugin": {
+      "onInit": "Dev_Back_Plugin_Init",
+      "onStop": "Dev_Back_Plugin_Stop"
+    }
   }
 }

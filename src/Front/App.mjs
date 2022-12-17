@@ -32,12 +32,6 @@ export default class Dev_Front_App {
         // then open event bf-stream
         /** @type {TeqFw_Web_Event_Front_Web_Connect_Stream_Open.act|function} */
         const connReverseOpen = spec['TeqFw_Web_Event_Front_Web_Connect_Stream_Open$'];
-        /** @type {TeqFw_Web_Event_Front_Mod_Bus} */
-        const eventBus = spec['TeqFw_Web_Event_Front_Mod_Bus$'];
-        /** @type {TeqFw_Web_Event_Shared_Event_Back_Stream_Reverse_Authenticated} */
-        const esbAuthenticated = spec['TeqFw_Web_Event_Shared_Event_Back_Stream_Reverse_Authenticated$'];
-        /** @type {TeqFw_Web_Event_Shared_Event_Back_Stream_Reverse_Failed} */
-        const esbFailed = spec['TeqFw_Web_Event_Shared_Event_Back_Stream_Reverse_Failed$'];
 
         // VARS
 
@@ -59,39 +53,15 @@ export default class Dev_Front_App {
                 return (typeof fn === 'function') ? fn : (msg) => console.log(msg);
             }
 
-            /**
-             * Wait until back-to-front events stream will be opened and authenticated before continue.
-             * @param {TeqFw_Di_Shared_Container} container
-             * @return {Promise<TeqFw_Web_Event_Shared_Dto_Event.Dto|null>}
-             */
-            async function initEventStream(container) {
-                return new Promise((resolve, reject) => {
-                    if (navigator.onLine) {
-                        // start reverse connection opening
-                        connReverseOpen();
-                        // set listeners to resume application when events stream will be ready
-                        const subsSuccess = eventBus.subscribe(esbAuthenticated.getEventName(), (evt) => {
-                            eventBus.unsubscribe(subsSuccess);
-                            logger.info(`Events reverse stream is opened on the front and authenticated by back.`);
-                            resolve(evt);
-                        });
-                        const subsFailed = eventBus.subscribe(esbFailed.getEventName(), (evt) => {
-                            // TODO: this event is not published by back yet
-                            eventBus.unsubscribe(subsFailed);
-                            debugger
-                            reject(new Error(evt?.data?.reason));
-                        });
-                    } else resolve();
-                });
-            }
-
-
             // MAIN
             const print = createPrintout(fnPrintout);
             print(`TeqFW App is initializing...`);
             await modIdentity.init();
             print(`Frontend identity is initialized.`);
-            await initEventStream(container);
+            await connReverseOpen();
+            print(`Stream for backend events is opened.`);
+            // create event listeners
+            await container.get('Dev_Front_Event_Sink_Trans_Tick$');
         }
 
         /**
