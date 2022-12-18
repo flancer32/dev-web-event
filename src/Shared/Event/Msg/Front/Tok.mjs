@@ -1,12 +1,12 @@
 /**
- * Random message from backend.
+ * 'Tock'-respond with random delay from frontend.
  */
 // MODULE'S VARS
-const NS = 'Dev_Shared_Event_Back_Tick';
+const NS = 'Dev_Shared_Event_Msg_Front_Tok';
 
 // MODULE'S CLASSES
 /**
- * @memberOf Dev_Shared_Event_Back_Tick
+ * @memberOf Dev_Shared_Event_Msg_Front_Tok
  */
 class Dto {
     static namespace = NS; // used as event name
@@ -19,7 +19,7 @@ class Dto {
 /**
  * @implements TeqFw_Core_Shared_Api_Factory_IDto
  */
-export default class Dev_Shared_Event_Back_Tick {
+export default class Dev_Shared_Event_Msg_Front_Tok {
     constructor(spec) {
         // DEPS
         /** @type {TeqFw_Core_Shared_Util_Cast.castInt|function} */
@@ -29,8 +29,8 @@ export default class Dev_Shared_Event_Back_Tick {
 
         // FUNCS
         /**
-         * @param {Dev_Shared_Event_Back_Tick.Dto} [data]
-         * @return {Dev_Shared_Event_Back_Tick.Dto}
+         * @param {Dev_Shared_Event_Msg_Front_Tok.Dto} [data]
+         * @return {Dev_Shared_Event_Msg_Front_Tok.Dto}
          */
         this.createDto = function (data) {
             // create new DTO and populate it with initialization data

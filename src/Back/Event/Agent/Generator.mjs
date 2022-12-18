@@ -16,8 +16,8 @@ export default class Dev_Back_Event_Agent_Generator {
         const portalFront = spec['TeqFw_Web_Event_Back_Mod_Portal_Front$'];
         /** @type {TeqFw_Web_Event_Back_Mod_Registry_Stream} */
         const modReg = spec['TeqFw_Web_Event_Back_Mod_Registry_Stream$'];
-        /** @type {Dev_Shared_Event_Back_Tick} */
-        const esbTick = spec['Dev_Shared_Event_Back_Tick$'];
+        /** @type {Dev_Shared_Event_Msg_Back_Tik} */
+        const esbTick = spec['Dev_Shared_Event_Msg_Back_Tik$'];
 
         // VARS
         logger.setNamespace(this.constructor.name);
