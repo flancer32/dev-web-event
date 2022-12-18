@@ -2,18 +2,11 @@
  * Web application.
  *
  * Initialization:
- * - Load config and i18n from server (WAPI).
- * - Init UUID for front & back.
- * - Init processes and bind it to events.
- * - Open reverse events stream.
- * - Init Vue (add router, Quasar UI, i18next),
+ * - Init frontend identity (UUID and asymmetric keys).
+ * - Open and authorize reverse events stream (back-to-front).
  *
- * Then create and mount root vue component to given DOM element.
+ * Then mount application UI to given DOM element.
  */
-// MODULE'S VARS
-const NS = 'Dev_Front_App';
-
-// MODULE'S CLASSES
 /**
  * @implements TeqFw_Web_Front_Api_IApp
  */
@@ -32,9 +25,6 @@ export default class Dev_Front_App {
         // then open event bf-stream
         /** @type {TeqFw_Web_Event_Front_Web_Connect_Stream_Open.act|function} */
         const connReverseOpen = spec['TeqFw_Web_Event_Front_Web_Connect_Stream_Open$'];
-
-        // VARS
-
 
         // MAIN
         logger.setNamespace(this.constructor.namespace);
@@ -60,21 +50,19 @@ export default class Dev_Front_App {
             print(`Frontend identity is initialized.`);
             await connReverseOpen();
             print(`Stream for backend events is opened.`);
-            // create event listeners
+            // create event sinks (consumers)
             await container.get('Dev_Front_Event_Sink_Trans_Tick$');
+            print(`All event sinks are created.`);
         }
 
         /**
-         * Mount root vue component of the application to DOM element.
-         *
-         * @see https://v3.vuejs.org/api/application-api.html#mount
-         *
+         * Mount application UI to given DOM element.
          * @param {Element|string} elRoot
          */
         this.mount = function (elRoot) {
             if (typeof elRoot === 'string') {
                 const el = document.querySelector(elRoot);
-                el.innerHTML = 'Started!';
+                el.innerHTML = 'Web application is started.';
             }
         }
     }

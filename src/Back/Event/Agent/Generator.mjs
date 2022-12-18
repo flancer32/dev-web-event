@@ -12,8 +12,8 @@ export default class Dev_Back_Event_Agent_Generator {
         // DEPS
         /** @type {TeqFw_Core_Shared_Api_ILogger} */
         const logger = spec['TeqFw_Core_Shared_Api_ILogger$$']; // instance
-        /** @type {TeqFw_Web_Event_Back_Mod_Server_Handler_Reverse_Portal} */
-        const portalFront = spec['TeqFw_Web_Event_Back_Mod_Server_Handler_Reverse_Portal$'];
+        /** @type {TeqFw_Web_Event_Back_Mod_Portal_Front} */
+        const portalFront = spec['TeqFw_Web_Event_Back_Mod_Portal_Front$'];
         /** @type {TeqFw_Web_Event_Back_Mod_Registry_Stream} */
         const modReg = spec['TeqFw_Web_Event_Back_Mod_Registry_Stream$'];
         /** @type {Dev_Shared_Event_Back_Tick} */
@@ -30,7 +30,7 @@ export default class Dev_Back_Event_Agent_Generator {
         }
 
         async function oneTick() {
-            const streams = modReg.getAll();
+            const streams = modReg.getAllActive();
             if (streams.length) {
                 // get random stream
                 const ndx = getRandomInt(streams.length);
