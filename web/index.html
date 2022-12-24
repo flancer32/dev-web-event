@@ -17,9 +17,9 @@
             installer.setNsApp('Dev_Front_App');
             // set printout to UI DIV & to console
             // local printout DIV
-            const elLaunchpad = document.querySelector('.launchpad');
+            const elInfo = document.querySelector('.printOut');
             installer.setFnPrintout((msg) => {
-                elLaunchpad.innerHTML = msg;
+                elInfo.innerHTML = msg;
                 console.log(`[shell]: ${msg}`);
             });
             // run the application's bootstrap
@@ -30,8 +30,18 @@
 </head>
 <body>
 
-<div class="launchpad">Starting...</div>
-<pre class="ticksDisplay"></pre>
+<div class="printOut">Starting...</div>
+<div class="info" style="display: none">
+    <div>Frontend UUID:</div>
+    <div class="frontUuid"></div>
+    <div>Session UUID:</div>
+    <div class="sessionUuid"></div>
+    <div>Backend UUID:</div>
+    <div class="backUuid"></div>
+    <div>SSE Stream UUID:</div>
+    <div class="streamUuid"></div>
+</div>
+<pre class="display"></pre>
 
 <!-- These styles are loaded after landing page is displayed -->
 <link rel="stylesheet" href="./styles.css">

@@ -5,11 +5,11 @@ import {describe, it} from 'mocha';
 // SETUP ENV
 
 // GET OBJECT FROM CONTAINER AND RUN TESTS
-const NS = 'Dev_Shared_Event_Msg_Back_Tik';
-/** @type {Dev_Shared_Event_Msg_Back_Tik} */
+const NS = 'Dev_Shared_Event_Msg_Back_Tic';
+/** @type {Dev_Shared_Event_Msg_Back_Tic} */
 const factory = await container.get(`${NS}$`);
 
-describe('Dev_Shared_Event_Msg_Back_Tik', function () {
+describe('Dev_Shared_Event_Msg_Back_Tic', function () {
     it('can inject tested object', async () => {
         assert(typeof factory === 'object');
     });

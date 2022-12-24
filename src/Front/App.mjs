@@ -19,12 +19,14 @@ export default class Dev_Front_App {
         const container = spec['TeqFw_Di_Shared_Container$'];
         /** @type {TeqFw_Core_Shared_Api_ILogger} */
         const logger = spec['TeqFw_Core_Shared_Api_ILogger$$']; // instance
-        // init identity
         /** @type {TeqFw_Web_Event_Front_Mod_Identity_Front} */
-        const modIdentity = spec['TeqFw_Web_Event_Front_Mod_Identity_Front$'];
-        // then open event bf-stream
+        const modIdFront = spec['TeqFw_Web_Event_Front_Mod_Identity_Front$'];
+        /** @type {TeqFw_Web_Front_Mod_Config} */
+        const modCfg = spec['TeqFw_Web_Front_Mod_Config$'];
         /** @type {TeqFw_Web_Event_Front_Web_Connect_Stream_Open.act|function} */
         const connReverseOpen = spec['TeqFw_Web_Event_Front_Web_Connect_Stream_Open$'];
+        /** @type {Dev_Front_Ui_Info_Update.act|function} */
+        const actUpdate = spec['Dev_Front_Ui_Info_Update$'];
 
         // MAIN
         logger.setNamespace(this.constructor.namespace);
@@ -46,13 +48,22 @@ export default class Dev_Front_App {
             // MAIN
             const print = createPrintout(fnPrintout);
             print(`TeqFW App is initializing...`);
-            await modIdentity.init();
+            await modCfg.init({}); // this app has no separate 'doors' (entry points)
+            print(`Application config is loaded.`);
+            await modIdFront.init();
             print(`Frontend identity is initialized.`);
+            // create event sinks (consumers)
+            await container.get('Dev_Front_Event_Sink_Local_Connect_Manager$');
+            await container.get('Dev_Front_Event_Sink_Local_Stream_Authenticated$');
+            await container.get('Dev_Front_Event_Sink_Trans_Call$');
+            await container.get('Dev_Front_Event_Sink_Trans_OneWay$');
+            print(`All event sinks are created.`);
             await connReverseOpen();
             print(`Stream for backend events is opened.`);
-            // create event sinks (consumers)
-            await container.get('Dev_Front_Event_Sink_Trans_Tick$');
-            print(`All event sinks are created.`);
+            // cron tasks
+            /** @type {TeqFw_Web_Event_Front_Cron_Queue_Clean} */
+            const cronClean = await container.get('TeqFw_Web_Event_Front_Cron_Queue_Clean$');
+            cronClean.start().then();
         }
 
         /**
@@ -60,10 +71,12 @@ export default class Dev_Front_App {
          * @param {Element|string} elRoot
          */
         this.mount = function (elRoot) {
-            if (typeof elRoot === 'string') {
-                const el = document.querySelector(elRoot);
-                el.innerHTML = 'Web application is started.';
-            }
+            const elPrintOut = document.querySelector(DEF.CSS_PRINT_OUT);
+            elPrintOut.style.display = 'none';
+            const elInfo = document.querySelector(DEF.CSS_INFO);
+            elInfo.style.display = 'grid';
+            // populate UI with data
+            actUpdate();
         }
     }
 }

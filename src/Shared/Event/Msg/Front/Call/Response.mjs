@@ -1,43 +1,41 @@
 /**
- * Random message sent from backend to frontend.
+ * Transborder call response to back request.
  */
 // MODULE'S VARS
-const NS = 'Dev_Shared_Event_Msg_Back_Tik';
+const NS = 'Dev_Shared_Event_Msg_Front_Call_Response';
 
 // MODULE'S CLASSES
 /**
- * @memberOf Dev_Shared_Event_Msg_Back_Tik
+ * @memberOf Dev_Shared_Event_Msg_Front_Call_Response
  */
 class Dto {
     static namespace = NS; // used as event name
-    /** @type {string} */
-    code;
-    /** @type {number} */
-    id;
+    /**
+     * Code from request returned to the back.
+     * @type {string}
+     */
+    answer;
 }
 
 /**
  * @implements TeqFw_Core_Shared_Api_Factory_IDto
  */
-export default class Dev_Shared_Event_Msg_Back_Tik {
+export default class Dev_Shared_Event_Msg_Front_Call_Response {
     constructor(spec) {
         // DEPS
-        /** @type {TeqFw_Core_Shared_Util_Cast.castInt|function} */
-        const castInt = spec['TeqFw_Core_Shared_Util_Cast.castInt'];
         /** @type {TeqFw_Core_Shared_Util_Cast.castString|function} */
         const castString = spec['TeqFw_Core_Shared_Util_Cast.castString'];
 
-        // FUNCS
+        // INSTANCE METHODS
         /**
-         * @param {Dev_Shared_Event_Msg_Back_Tik.Dto} [data]
-         * @returns {Dev_Shared_Event_Msg_Back_Tik.Dto}
+         * @param {Dev_Shared_Event_Msg_Front_Call_Response.Dto} [data]
+         * @return {Dev_Shared_Event_Msg_Front_Call_Response.Dto}
          */
         this.createDto = function (data) {
             // create new DTO and populate it with initialization data
             const res = Object.assign(new Dto(), data);
             // cast known attributes
-            res.code = castString(data?.code);
-            res.id = castInt(data?.id);
+            res.answer = castString(data?.answer);
             return res;
         }
     }
