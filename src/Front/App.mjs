@@ -27,6 +27,8 @@ export default class Dev_Front_App {
         const connReverseOpen = spec['TeqFw_Web_Event_Front_Web_Connect_Stream_Open$'];
         /** @type {Dev_Front_Ui_Info_Update.act|function} */
         const actUpdate = spec['Dev_Front_Ui_Info_Update$'];
+        /** @type {Dev_Front_Ui_Actions_Bind.act|function} */
+        const actBind = spec['Dev_Front_Ui_Actions_Bind$'];
 
         // MAIN
         logger.setNamespace(this.constructor.namespace);
@@ -54,7 +56,7 @@ export default class Dev_Front_App {
             print(`Frontend identity is initialized.`);
             // create event sinks (consumers)
             await container.get('Dev_Front_Event_Sink_Local_Connect_Manager$');
-            await container.get('Dev_Front_Event_Sink_Local_Stream_Authenticated$');
+            await container.get('Dev_Front_Event_Sink_Local_Stream_State$');
             await container.get('Dev_Front_Event_Sink_Trans_Call$');
             await container.get('Dev_Front_Event_Sink_Trans_OneWay$');
             print(`All event sinks are created.`);
@@ -74,8 +76,11 @@ export default class Dev_Front_App {
             const elPrintOut = document.querySelector(DEF.CSS_PRINT_OUT);
             elPrintOut.style.display = 'none';
             const elInfo = document.querySelector(DEF.CSS_INFO);
+            const elActions = document.querySelector(DEF.CSS_ACTIONS);
             elInfo.style.display = 'grid';
-            // populate UI with data
+            elActions.style.display = 'block';
+            // bind handlers and populate UI with data
+            actBind();
             actUpdate();
         }
     }

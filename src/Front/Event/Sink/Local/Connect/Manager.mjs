@@ -78,7 +78,9 @@ export default class Dev_Front_Event_Sink_Local_Connect_Manager {
                         _idIntervalTry = setInterval(retryStreamOpening, TIMEOUT_NORM);
                     }
                 }
-                connReverseOpen();
+                connReverseOpen().catch(() => {
+                    // stealth errors
+                });
             }
         }
     }

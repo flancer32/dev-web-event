@@ -26,10 +26,10 @@ export default function (spec) {
     const esbOneWaySession = spec['Dev_Shared_Event_Msg_Back_OneWay_Session$'];
     /** @type {Dev_Shared_Event_Msg_Back_Call_Request} */
     const esbReq = spec['Dev_Shared_Event_Msg_Back_Call_Request$'];
-    /** @type {Dev_Back_Event_Call_Trans.act|function} */
-    const callTrans = spec['Dev_Back_Event_Call_Trans$'];
-    /** @type {TeqFw_Web_Event_Shared_Dto_Event_Meta_Trans} */
-    const factMeta = spec['TeqFw_Web_Event_Shared_Dto_Event_Meta_Trans$'];
+    /** @type {Dev_Shared_Event_Msg_Front_Call_Response} */
+    const esfRes = spec['Dev_Shared_Event_Msg_Front_Call_Response$'];
+    /** @type {TeqFw_Web_Event_Back_Act_Trans_Call.act|function} */
+    const callTrans = spec['TeqFw_Web_Event_Back_Act_Trans_Call$'];
 
     // MAIN
     logger.setNamespace(NS);
@@ -79,21 +79,30 @@ export default function (spec) {
         async function callSession(evt) {
             const data = esbReq.createDto();
             data.question = randomInt(9999).toString();
-            const meta = factMeta.createDto();
-            meta.sessionUuid = evt.sessionUuid;
             try {
+                const opts = {timeout: 30000, sessionUuid: evt.sessionUuid, frontUuid: evt.frontUuid};
                 /** @type {Dev_Shared_Event_Msg_Front_Call_Response.Dto} */
-                const rs = await callTrans(data, meta);
+                const rs = await callTrans(data, esfRes, opts);
                 logger.info(`There is an answer for call event: ${rs.answer}.`);
             } catch (e) {
                 logger.error(`There is no answer for call event: ${data.question}.`);
             }
         }
 
+        function callSessionInLoop(event) {
+            let i = 0;
+            const id = setInterval(() => {
+                i++;
+                if (i > 20) clearInterval(id);
+                else callSession(event).catch();
+            }, 3000);
+        }
+
         // MAIN
         oneWayFront(event);
         oneWaySession(event);
-        callSession(event).then();
+        callSession(event).catch();
+        callSessionInLoop(event);
     }
 
 

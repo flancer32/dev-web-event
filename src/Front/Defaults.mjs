@@ -2,12 +2,12 @@
  * Plugin constants (hardcoded configuration) for frontend code.
  */
 export default class Dev_Front_Defaults {
-    CSS_BACK_TICS = '.backTics';
+    CSS_ACTIONS = '#actions';
     CSS_BACK_UUID = '.backUuid';
     CSS_DISPLAY = '.display';
-    CSS_FRONT_TICS = '.frontTics';
     CSS_FRONT_UUID = '.frontUuid';
     CSS_INFO = '.info';
+    CSS_BTN_CALL= '#btnCall';
     CSS_PRINT_OUT = '.printOut';
     CSS_SESSION_UUID = '.sessionUuid';
     CSS_STREAM_UUID = '.streamUuid';
