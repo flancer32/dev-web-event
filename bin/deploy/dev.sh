@@ -44,7 +44,6 @@ processRepo "teqfw/db"
 processRepo "teqfw/di"
 processRepo "teqfw/test"
 processRepo "teqfw/web"
-processRepo "teqfw/web-api"
 processRepo "teqfw/web-event"
 
 echo ""
