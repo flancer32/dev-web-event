@@ -32,6 +32,8 @@ export default function (spec) {
     const callTrans = spec['TeqFw_Web_Event_Back_Act_Trans_Call$'];
 
     // MAIN
+    /** @type {Object<string, boolean>} */
+    const _sessions = {};
     logger.setNamespace(NS);
     eventsBack.subscribe(ebAuth, onAuth);
     Object.defineProperty(onAuth, 'namespace', {value: NS});
@@ -89,13 +91,26 @@ export default function (spec) {
             }
         }
 
+        /**
+         * @param {TeqFw_Web_Event_Back_Event_Msg_Stream_Authenticated.Dto} event
+         */
         function callSessionInLoop(event) {
-            let i = 0;
-            const id = setInterval(() => {
-                i++;
-                if (i > 20) clearInterval(id);
-                else callSession(event).catch();
-            }, 3000);
+            const sessUuid = event.sessionUuid;
+            if (!_sessions[sessUuid]) {
+                logger.info(`New loop for session ${sessUuid} is started.`);
+                _sessions[sessUuid] = true;
+                let i = 0;
+                const id = setInterval(() => {
+                    i++;
+                    if (i > 20) {
+                        clearInterval(id);
+                        delete _sessions[sessUuid];
+                        logger.info(`Loop events for session ${sessUuid} is completed.`);
+                    } else callSession(event).catch();
+                }, 3000);
+            } else {
+                logger.info(`There is loop for session ${sessUuid}.`);
+            }
         }
 
         // MAIN
