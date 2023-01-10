@@ -56,6 +56,7 @@ export default function (spec) {
             /** @type {TeqFw_Web_Event_Shared_Dto_Event_Meta_Trans.Dto} */
             const meta = msg.meta;
             meta.frontUuid = evt.frontUuid;
+            // noinspection JSCheckFunctionSignatures
             portalFront.publish(msg).then();
         }
 
@@ -71,30 +72,35 @@ export default function (spec) {
             const meta = msg.meta;
             meta.sessionUuid = evt.sessionUuid;
             meta.encrypted = true;
+            // noinspection JSCheckFunctionSignatures
             portalFront.publish(msg).then();
-        }
-
-        /**
-         * Produce request call for current session of the authenticated front.
-         * @param {TeqFw_Web_Event_Back_Event_Msg_Stream_Authenticated.Dto} evt
-         */
-        async function callSession(evt) {
-            const data = esbReq.createDto();
-            data.question = randomInt(9999).toString();
-            try {
-                const opts = {timeout: 30000, sessionUuid: evt.sessionUuid, frontUuid: evt.frontUuid};
-                /** @type {Dev_Shared_Event_Msg_Front_Call_Response.Dto} */
-                const rs = await callTrans(data, esfRes, opts);
-                logger.info(`There is an answer for call event: ${rs.answer}.`);
-            } catch (e) {
-                logger.error(`There is no answer for call event: ${data.question}.`);
-            }
         }
 
         /**
          * @param {TeqFw_Web_Event_Back_Event_Msg_Stream_Authenticated.Dto} event
          */
         function callSessionInLoop(event) {
+            // FUNCS
+            /**
+             * Produce request call for current session of the authenticated front.
+             * @param {TeqFw_Web_Event_Back_Event_Msg_Stream_Authenticated.Dto} evt
+             * @param {number} index
+             */
+            async function callSession(evt, index) {
+                const data = esbReq.createDto();
+                data.index = index;
+                data.question = randomInt(9999).toString();
+                try {
+                    const opts = {timeout: 30000, sessionUuid: evt.sessionUuid, frontUuid: evt.frontUuid};
+                    /** @type {Dev_Shared_Event_Msg_Front_Call_Response.Dto} */
+                    const rs = await callTrans(data, esfRes, opts);
+                    logger.info(`There is an answer for call event: ${rs.answer}.`);
+                } catch (e) {
+                    logger.error(`There is no answer for call event: ${data.question}.`);
+                }
+            }
+
+            // MAIN
             const sessUuid = event.sessionUuid;
             if (!_sessions[sessUuid]) {
                 logger.info(`New loop for session ${sessUuid} is started.`);
@@ -106,7 +112,9 @@ export default function (spec) {
                         clearInterval(id);
                         delete _sessions[sessUuid];
                         logger.info(`Loop events for session ${sessUuid} is completed.`);
-                    } else callSession(event).catch();
+                    } else
+                        // noinspection JSCheckFunctionSignatures
+                        callSession(event, i).catch();
                 }, 3000);
             } else {
                 logger.info(`There is loop for session ${sessUuid}.`);
@@ -116,9 +124,7 @@ export default function (spec) {
         // MAIN
         oneWayFront(event);
         oneWaySession(event);
-        callSession(event).catch();
         callSessionInLoop(event);
     }
-
 
 }

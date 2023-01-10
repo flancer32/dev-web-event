@@ -17,7 +17,7 @@
             installer.setNsApp('Dev_Front_App');
             // set printout to UI DIV & to console
             // local printout DIV
-            const elInfo = document.querySelector('.printOut');
+            const elInfo = document.querySelector('#printOut');
             installer.setFnPrintout((msg) => {
                 elInfo.innerHTML = msg;
                 console.log(`[shell]: ${msg}`);
@@ -30,21 +30,49 @@
 </head>
 <body>
 
-<div class="printOut">Starting...</div>
-<div id="actions" style="display: none">
-    <button id="btnCall">Call Event</button>
+<div id="printOut">Starting...</div>
+<div id="display" style="display: none">
+    <div id="title">Events in a Web App</div>
+    <div>
+        <div>Demo app for <a href="https://wiredgeese.com/a2e77a6ed140">posts series</a> about SSE based events in web
+            apps. Sources for this app are in <a href="https://github.com/flancer32/dev-web-event">flancer32/dev-web-event</a>.
+        </div>
+        <div>There are following events (see 'Network' tab in 'DevTools'):</div>
+        <ul>
+            <li><b>Dev_Shared_Event_Msg_Back_</b>: messages are sent by back when a front is authenticated on the
+                back;
+            </li>
+            <ul>
+                <li><b>Back_OneWay_Front</b>: one-way message for all sessions of a front;</li>
+                <li><b>Back_OneWay_Session</b>: one-way message for concrete session (tab);</li>
+                <li><b>Back_Call_Request</b>: call request (question) for concrete session (the back sends 20 calls with
+                    period 3 sec.);
+                </li>
+                <li><b>Back_Call_Response</b>: response for concrete call request from front (answer);</li>
+            </ul>
+            <li><b>Dev_Shared_Event_Msg_Front_</b>: messages are sent by front;</li>
+            <ul>
+                <li><b>Front_Call_Request</b>: call request (question) for the back (manually, button click);</li>
+                <li><b>Front_Call_Response</b>: response for concrete call request from back (answer);</li>
+                </li>
+            </ul>
+        </ul>
+    </div>
+    <div id="info">
+        <div>Frontend UUID (profile in a browser):</div>
+        <div class="frontUuid"></div>
+        <div>Session UUID (tab in a browser):</div>
+        <div class="sessionUuid"></div>
+        <div>Backend UUID (one only back in the app):</div>
+        <div class="backUuid"></div>
+        <div>SSE Stream UUID (is changed on re-connect):</div>
+        <div class="streamUuid"></div>
+    </div>
+    <div id="actions">
+        <button id="btnCall">Call to Back</button>
+    </div>
+    <div id="traceInfo"></div>
 </div>
-<div class="info" style="display: none">
-    <div>Frontend UUID:</div>
-    <div class="frontUuid"></div>
-    <div>Session UUID:</div>
-    <div class="sessionUuid"></div>
-    <div>Backend UUID:</div>
-    <div class="backUuid"></div>
-    <div>SSE Stream UUID:</div>
-    <div class="streamUuid"></div>
-</div>
-<pre class="display"></pre>
 
 <!-- These styles are loaded after landing page is displayed -->
 <link rel="stylesheet" href="./styles.css">

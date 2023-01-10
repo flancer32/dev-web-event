@@ -73,12 +73,11 @@ export default class Dev_Front_App {
          * @param {Element|string} elRoot
          */
         this.mount = function (elRoot) {
+            // switch visibility
             const elPrintOut = document.querySelector(DEF.CSS_PRINT_OUT);
             elPrintOut.style.display = 'none';
-            const elInfo = document.querySelector(DEF.CSS_INFO);
-            const elActions = document.querySelector(DEF.CSS_ACTIONS);
-            elInfo.style.display = 'grid';
-            elActions.style.display = 'block';
+            const elDisplay = document.querySelector(DEF.CSS_DISPLAY);
+            elDisplay.style.display = 'block';
             // bind handlers and populate UI with data
             actBind();
             actUpdate();

@@ -1,6 +1,17 @@
-.info {
+#title {
+    font-weight: bold;
+    text-align: center;
+}
+
+#info {
     display: grid;
     grid-template-columns: 1fr 1fr;
     margin-bottom: 10px;
     margin-top: 10px;
+}
+
+#traceInfo {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-column-gap: 10px;
 }

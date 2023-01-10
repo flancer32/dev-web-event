@@ -11,6 +11,11 @@ const NS = 'Dev_Shared_Event_Msg_Back_Call_Request';
 class Dto {
     static namespace = NS; // used as event name
     /**
+     * Index of event in the loop.
+     * @type {number}
+     */
+    index;
+    /**
      * Code sent to front that should be returned back in response.
      * @type {string}
      */
@@ -23,6 +28,8 @@ class Dto {
 export default class Dev_Shared_Event_Msg_Back_Call_Request {
     constructor(spec) {
         // DEPS
+        /** @type {TeqFw_Core_Shared_Util_Cast.castInt|function} */
+        const castInt = spec['TeqFw_Core_Shared_Util_Cast.castInt'];
         /** @type {TeqFw_Core_Shared_Util_Cast.castString|function} */
         const castString = spec['TeqFw_Core_Shared_Util_Cast.castString'];
 
@@ -35,6 +42,7 @@ export default class Dev_Shared_Event_Msg_Back_Call_Request {
             // create new DTO and populate it with initialization data
             const res = Object.assign(new Dto(), data);
             // cast known attributes
+            res.index = castInt(data?.index);
             res.question = castString(data?.question);
             return res;
         }
