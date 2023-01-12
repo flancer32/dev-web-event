@@ -32,6 +32,7 @@ export default class Dev_Front_App {
 
         // MAIN
         logger.setNamespace(this.constructor.namespace);
+        let _print; // function to printout logs to UI or console
 
         // INSTANCE METHODS
 
@@ -48,24 +49,31 @@ export default class Dev_Front_App {
             }
 
             // MAIN
-            const print = createPrintout(fnPrintout);
-            print(`TeqFW App is initializing...`);
-            await modCfg.init({}); // this app has no separate 'doors' (entry points)
-            print(`Application config is loaded.`);
-            await modIdFront.init();
-            print(`Frontend identity is initialized.`);
-            // create event sinks (consumers)
-            await container.get('Dev_Front_Event_Sink_Local_Connect_Manager$');
-            await container.get('Dev_Front_Event_Sink_Local_Stream_State$');
-            await container.get('Dev_Front_Event_Sink_Trans_Call$');
-            await container.get('Dev_Front_Event_Sink_Trans_OneWay$');
-            print(`All event sinks are created.`);
-            await connReverseOpen();
-            print(`Stream for backend events is opened.`);
-            // cron tasks
-            /** @type {TeqFw_Web_Event_Front_Cron_Queue_Clean} */
-            const cronClean = await container.get('TeqFw_Web_Event_Front_Cron_Queue_Clean$');
-            cronClean.start().then();
+            let res = true;
+            _print = createPrintout(fnPrintout);
+            _print(`TeqFW App is initializing...`);
+            try {
+                await modCfg.init({}); // this app has no separate 'doors' (entry points)
+                _print(`Application config is loaded.`);
+                await modIdFront.init();
+                _print(`Frontend identity is initialized.`);
+                // create event sinks (consumers)
+                await container.get('Dev_Front_Event_Sink_Local_Connect_Manager$');
+                await container.get('Dev_Front_Event_Sink_Local_Stream_State$');
+                await container.get('Dev_Front_Event_Sink_Trans_Call$');
+                await container.get('Dev_Front_Event_Sink_Trans_OneWay$');
+                _print(`All event sinks are created.`);
+                await connReverseOpen();
+                _print(`Stream for backend events is opened.`);
+                // cron tasks
+                /** @type {TeqFw_Web_Event_Front_Cron_Queue_Clean} */
+                const cronClean = await container.get('TeqFw_Web_Event_Front_Cron_Queue_Clean$');
+                cronClean.start().then();
+            } catch (e) {
+                _print(e?.message);
+                res = false;
+            }
+            return res;
         }
 
         /**
@@ -81,6 +89,14 @@ export default class Dev_Front_App {
             // bind handlers and populate UI with data
             actBind();
             actUpdate();
+        }
+
+        this.reinstall = function (elRoot) {
+            _print(`
+It is required to reinstall app. Please clean up all data in DevTools 
+(F12 / Application / Storage / Clear site data).
+Then reload this page.
+`);
         }
     }
 }
